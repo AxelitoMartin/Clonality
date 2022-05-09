@@ -1,0 +1,85 @@
+  
+
+     
+@ARTICLE{lrloh,
+    Author         = {I. Ostrovnaya and V.E. Seshan and C.B. Begg},
+    Journal        = {Biometrics},
+    Title          = {Comparison of properties of tests for assessing tumor clonality},
+    Year           = {2008},
+    volume	   = {68},
+    pages          = {1018-1022}
+}
+@ARTICLE{cghSM,
+    Author         = {I Ostrovnaya and A.B. Olshen and V.E. Seshan and I. Orlow and D.G. Albertson and C.B. Begg },
+    Journal        = {Statistics in Medicine},
+    Title          = {A metastasis or a second independent cancer? Evaluating the clonal origin of tumors using array copy number data},
+    Year           = {2010},
+    volume	   = {29},
+    pages          = {1608-1621}
+}
+
+
+@ARTICLE{begg07,
+    Author         = {C.B. Begg and K.H. Eng and A.J. Hummer},
+    Journal        = {Biometrics},
+    Title          = {Statistical tests for clonality},
+    Year           = {2007},
+    volume	   = {63},
+    pages          = {522-530}
+}
+
+
+@ARTICLE{hwang,
+    Author         = {ES Hwang and SF Nyante and YY Chen and D Moore and S DeVries and JE Korkola and LJ Esserman  and FM Waldman},
+    Journal        = {Cancer},
+    Title          = {Clonality of lobular carcinoma in situ and synchronous invasive lobular cancer},
+    Year           = {2004},
+    volume	   = {100(12)},
+    pages          = {2562-72}
+}
+
+@ARTICLE{cbs1,
+    Author         = {A.B. Olshen and E.S. Venkatraman and R. Lucito and M. Wigler},
+    Journal        = {Biostatistics},
+    Title          = {Circular binary segmentation for the analysis of array-based DNA copy number data},
+    Year           = {2004},
+    volume	   = {5},
+    pages          = {557-572}
+}
+@ARTICLE{cbs2,
+    Author         = {E.S. Venkatraman and A.B. Olshen},
+    Journal        = {Bioinformatics},
+    Title          = { A faster circular binary segmentation algorithm for the analysis of array CGH data},
+    Year           = {2007},
+    volume	   = {23},
+    pages          = {657-663}
+}
+
+@ARTICLE{aas,
+    Author         = {I Ostrovnaya  and Seshan VE and Begg CB },
+    Journal        = {Annals of Applied Statistics },
+    Title          = { USING SOMATIC MUTATION DATA TO TEST TUMORS FOR CLONAL RELATEDNESS},
+    Year           = {2015},
+    volume	   = {9(3)},
+    pages          = {1533-1548}
+}
+
+@ARTICLE{audrey,
+    Author         = {A Mauguen and VE Seshan  and I Ostrovnaya  and CB Begg },
+    Journal        = {Biometrics},
+    Title          = {Estimating the Probability of Clonal Relatedness of 
+Pairs of Tumors in Cancer Patients},
+    Year           = {2017},
+    volume	   = {000},
+    pages          = {000}
+} 
+
+@ARTICLE{lcis,
+    Author         = {CB Begg  and I Ostrovnaya  and  JV Carniello and  RA Sakr and D  Giri and  R Towers and M Schizas and  M DeBrot and  VP Andrade and  A Mauguen and  VE Seshan and TA King},
+    Journal        = {Breast Cancer Res},
+    Title          = { Clonal relationships between lobular carcinoma in situ and other breast malignancies},
+    Year           = {2016},
+    volume	   = {18(1)},
+    pages          = {66}
+}
+

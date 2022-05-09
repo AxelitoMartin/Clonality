@@ -1,0 +1,5 @@
+data(lcis)
+data(freqdata)
+load("data/genes_Clonality.Rdata")
+mut.matrix<-create.mutation.matrix(lcis )
+xmut.ids <- rownames(mut.matrix)[1:10]

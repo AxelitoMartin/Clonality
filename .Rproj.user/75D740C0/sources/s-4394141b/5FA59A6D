@@ -1,0 +1,24 @@
+{
+    "id": "5FA59A6D",
+    "path": "~/Clonality/R/create.mutation.matrix.R",
+    "project_path": "R/create.mutation.matrix.R",
+    "type": "r_source",
+    "hash": "2999104523",
+    "contents": "",
+    "dirty": false,
+    "created": 1647548408831.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1564088114,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1564088114,
+    "read_only": false,
+    "read_only_alternatives": []
+}

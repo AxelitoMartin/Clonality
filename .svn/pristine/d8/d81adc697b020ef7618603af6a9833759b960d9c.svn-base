@@ -1,0 +1,16 @@
+Package: Clonality
+Type: Package
+Title: Clonality testing
+Version: 1.23.0
+Date: 2012-20-04
+Author: Irina Ostrovnaya
+Maintainer: Irina Ostrovnaya <ostrovni@mskcc.org>
+Depends: R (>= 2.12.2), DNAcopy
+Imports: DNAcopy, grDevices, graphics, stats, utils
+Suggests: gdata, DNAcopy
+Description: Statistical tests for clonality versus independence of
+        tumors from the same patient based on their LOH or genomewide
+        copy number profiles
+License: GPL-3
+LazyLoad: yes
+biocViews: Microarray, CopyNumberVariation, Classification, aCGH

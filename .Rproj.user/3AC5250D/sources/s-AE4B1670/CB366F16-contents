@@ -1,0 +1,23 @@
+# library(dplyr)
+# library(dtplyr)
+library(Clonality)
+library(data.table)
+
+data(lcis)
+mut.matrix<-create.mutation.matrix(lcis )
+xmut.ids <- rownames(mut.matrix)
+# xmut.ids <- gsub("X",23,xmut.ids)
+
+tcga.cancer.type <- "LUAD"
+reference.data <- NULL
+combine.with.TCGA <- F
+
+out_test <- get.mutation.frequencies(xmut.ids, tcga.cancer.type="LUAD", reference.data=NULL,combine.with.TCGA=FALSE )
+out_test
+
+data("d.gene")
+
+
+
+load("/Users/axel/Desktop/MSKCC Work/Clonality Project/temp_clonality/Clonality/data/TCGA_GT_probs.Rdata")
+load("/Users/axel/Desktop/MSKCC Work/Clonality Project/temp_clonality/Clonality/data/TCGA_GT_agg_probs.Rdata")

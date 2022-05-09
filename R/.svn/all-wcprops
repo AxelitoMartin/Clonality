@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/bioconductor/!svn/ver/65142/trunk/madman/Rpacks/Clonality/R
+END
+LRts.R
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/LRts.R
+END
+prettyplot.R
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/prettyplot.R
+END
+indiv.test.R
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/indiv.test.R
+END
+tumors.R
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bioconductor/!svn/ver/65141/trunk/madman/Rpacks/Clonality/R/tumors.R
+END
+CM.pvalue.R
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/CM.pvalue.R
+END
+func.R
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/func.R
+END
+calculateLR.R
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/bioconductor/!svn/ver/66711/trunk/madman/Rpacks/Clonality/R/calculateLR.R
+END
+histogramPlot.R
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/histogramPlot.R
+END
+LRtesting3or4tumors.R
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/bioconductor/!svn/ver/65142/trunk/madman/Rpacks/Clonality/R/LRtesting3or4tumors.R
+END
+get.oneseg.bdry.R
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/bioconductor/!svn/ver/54699/trunk/madman/Rpacks/Clonality/R/get.oneseg.bdry.R
+END
+chromosomePlots.R
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/chromosomePlots.R
+END
+calc.freq.R
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/65141/trunk/madman/Rpacks/Clonality/R/calc.freq.R
+END
+refvector.R
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/refvector.R
+END
+ave.adj.probes.R
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/bioconductor/!svn/ver/73423/trunk/madman/Rpacks/Clonality/R/ave.adj.probes.R
+END
+LOHclonality.R
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/LOHclonality.R
+END
+GL.R
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/GL.R
+END
+ECMtesting.R
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/bioconductor/!svn/ver/65142/trunk/madman/Rpacks/Clonality/R/ECMtesting.R
+END
+genomewidePlots.R
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/genomewidePlots.R
+END
+grantLR.R
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/grantLR.R
+END
+splitChromosomes.R
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/splitChromosomes.R
+END
+class.all.R
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/class.all.R
+END
+complexts.R
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/complexts.R
+END
+clonality.analysis.R
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/clonality.analysis.R
+END
+oneseg.R
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/oneseg.R
+END
+LRpv.R
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/bioconductor/!svn/ver/52051/trunk/madman/Rpacks/Clonality/R/LRpv.R
+END
+segment1.R
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/bioconductor/!svn/ver/54635/trunk/madman/Rpacks/Clonality/R/segment1.R
+END

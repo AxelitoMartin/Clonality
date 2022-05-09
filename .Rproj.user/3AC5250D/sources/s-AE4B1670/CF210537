@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1650646668333.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "CF210537",
+    "lastKnownWriteTime" : 1650646690,
+    "last_content_update" : 1650646690790,
+    "path" : "~/Desktop/Clonality/R/SNVtest.R",
+    "project_path" : "R/SNVtest.R",
+    "properties" : {
+        "cursorPosition" : "55,48",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
