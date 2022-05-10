@@ -125,6 +125,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, reference.
   # freq <- as.numeric(matched_genes$freq)
   # names(freq)<-xmut.ids
   # freq
+  matched_genes <- matched_genes[,-2]
   matched_genes
 }
 
