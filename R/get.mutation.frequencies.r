@@ -1,4 +1,4 @@
-get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, reference.data=NULL,combine.with.TCGA=FALSE ) {
+get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cancer.type.2=NULL,reference.data=NULL,combine.with.TCGA=FALSE ) {
   library(data.table)
   # library(dplyr)
   # library(dtplyr)
@@ -58,7 +58,82 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, reference.
     }
   }
   
-  
+  if(!is.null(tcga.cancer.type.2)){
+    # get new estimates of tcga #
+    site_spe_gt.2 <- as.data.table(GT_probs[[tcga.cancer.type.2]])
+    site_spe_gt.2 <- site_spe_gt.2[site_spe_gt.2$warning ==0,]
+    site_spe_agg_gt.2 <- as.data.table(GT_agg_probs[[tcga.cancer.type.2]])
+    
+    matched_genes.2 <- data.frame(matrix(nrow = nrow(matched_genes), ncol = 2))
+    for(i in 1:length(genes)){
+      gene_temp <- genes[i]
+      variants <- matched_genes$variant[matched_genes$gene == gene_temp]
+      site_spe_gt_temp.2 <- site_spe_gt.2[site_spe_gt.2$Gene == gene_temp,]
+      if(nrow(site_spe_gt_temp.2) > 0){
+        variants_temp <- ifelse(variants %in% site_spe_gt_temp.2$Variant, variants, "each_unseen")
+        matched_genes.2[match(variants,matched_genes$variant) , 1] <- as.numeric(site_spe_gt_temp.2$GT[match(variants_temp,site_spe_gt_temp.2$Variant)])
+        matched_genes.2[match(variants,matched_genes$variant) , 2] <- FALSE
+      }
+      else{
+        variants_temp <- ifelse(variants %in% site_spe_agg_gt.2$Variant, variants, "each_unseen")
+        matched_genes.2[match(variants,matched_genes$variant) , 1] <- as.numeric(site_spe_agg_gt.2$GT_agg[match(variants_temp,site_spe_agg_gt.2$Variant)])
+        matched_genes.2[match(variants,matched_genes$variant) , 2] <- TRUE
+      }
+    }
+    colnames(matched_genes.2) <- c("freq.2","aggregated_estimate.2")
+    out <- cbind(matched_genes,matched_genes.2)
+    
+    ### fix aggregation mismatch ###
+    for(i in 1:nrow(out)){
+      if(sum(as.logical(out$aggregated_estimate[i]), out$aggregated_estimate.2[i]) == 1){
+        # if first site has true --> check how many variants #
+        if(!as.logical(out$aggregated_estimate[i])){
+          temp <- site_spe_gt[site_spe_gt$Gene == out$gene[i],]
+          temp <- temp[-which(temp$Variant %in% c("atleast_1new","each_unseen")),]
+          
+          agg_vals_temp <- sort(unique(site_spe_agg_gt$GT_agg[-which(site_spe_agg_gt$Variant %in% c("atleast_1new"))]))
+          vals_temp <- sort(unique(site_spe_gt$GT[site_spe_gt$Variant != "atleast_1new" & site_spe_gt$Gene == out$gene[i]]))
+          
+          if(is.na(sort(unique(temp$GT))[3] < as.numeric(out$freq[i]))){
+            rank_temp <- which.min(abs(vals_temp - as.numeric(out$freq[i])))
+            out$freq[i] <- agg_vals_temp[rank_temp]
+            out$aggregated_estimate[i] <- TRUE
+          }
+          
+          if(!is.na(sort(unique(temp$GT))[3] <= as.numeric(out$freq[i]))){
+            if(sort(unique(temp$GT))[3] < as.numeric(out$freq[i])){
+              rank_temp <- which.min(abs(vals_temp - as.numeric(out$freq[i])))
+              out$freq[i] <- agg_vals_temp[rank_temp]
+              out$aggregated_estimate[i] <- TRUE
+            }
+          }
+        }
+        
+        # if second site has true #
+        if(!as.logical(out$aggregated_estimate.2[i])){
+          temp <- site_spe_gt.2[site_spe_gt.2$Gene == out$gene[i],]
+          temp <- temp[-which(temp$Variant %in% c("atleast_1new","each_unseen")),]
+          
+          agg_vals_temp <- sort(unique(site_spe_agg_gt.2$GT_agg[-which(site_spe_agg_gt.2$Variant %in% c("atleast_1new"))]))
+          vals_temp <- sort(unique(site_spe_gt.2$GT[site_spe_gt.2$Variant != "atleast_1new" & site_spe_gt.2$Gene == out$gene[i]]))
+          
+          if(is.na(sort(unique(temp$GT))[3] < as.numeric(out$freq.2[i]))){
+            rank_temp <- which.min(abs(vals_temp - as.numeric(out$freq.2[i])))
+            out$freq.2[i] <- agg_vals_temp[rank_temp]
+            out$aggregated_estimate.2[i] <- TRUE
+          }
+          
+          if(!is.na(sort(unique(temp$GT))[3] <= as.numeric(out$freq.2[i]))){
+            if(sort(unique(temp$GT))[3] > as.numeric(out$freq.2[i])){
+              rank_temp <- which.min(abs(vals_temp - as.numeric(out$freq.2[i])))
+              out$freq.2[i] <- agg_vals_temp[rank_temp]
+              out$aggregated_estimate.2[i] <- TRUE
+            }
+          }
+        }
+      }
+    }
+  }
   
   
   #   if (!is.null(reference.data)) #estimation using reference file
@@ -125,8 +200,12 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, reference.
   # freq <- as.numeric(matched_genes$freq)
   # names(freq)<-xmut.ids
   # freq
-  matched_genes <- matched_genes[,-2]
-  matched_genes
+  # matched_genes <- matched_genes[,-2]
+  # matched_genes
+  if(!is.null(tcga.cancer.type.2))
+    return(out)
+  else
+    return(matched_genes)
 }
 
 
