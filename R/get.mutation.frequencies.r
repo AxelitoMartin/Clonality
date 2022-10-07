@@ -21,28 +21,6 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
   if(!is.null(reference.genes))
     reference.genes <- as_tibble(reference.genes)
   
-  # load("~/Desktop/clonality_validation/data/impact_val.Rdata")
-  
-  # x <- "TP53"
-  # y <- "LUAD"
-  # # reference.data <-impact
-  # var_freq <- as.data.table(reference.data)[Hugo_Symbol == x & Cancer_Code == y,
-  #                                .(v_f = length(unique(patient_id))),
-  #                                by = .(Variant)
-  #                                ]
-  # return(var_freq)
-  
-  
-  # data("d.gene")
-  # data("GT_probs")
-  # data("GT_agg_probs")
-  
-  # d.gene <- data.table::setDT(d.gene)
-  # print(d.gene[1,])
-  # make these internal data once done #
-  # load("/Users/axel/Desktop/MSKCC Work/Clonality Project/temp_clonality/Clonality/data/TCGA_GT_probs.Rdata")
-  # load("/Users/axel/Desktop/MSKCC Work/Clonality Project/temp_clonality/Clonality/data/TCGA_GT_agg_probs.Rdata")
-  
   xmut.ids <- gsub("X",23,xmut.ids)
   plus1<-TRUE
   # if (! (all(substr(xmut.ids,1,1) %in% c(c(1:9),"X","Y") | substr(xmut.ids,1,2) %in% c(c(10:22)) )))
@@ -50,7 +28,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
   
   if (is.null(tcga.cancer.type) & is.null(reference.data)) stop("You either need to specify 'tcga.cancer.type' to use TCGA based frequnecies or specify 'reference.data' to get reference dataset for frequency calculation")
   if (combine.with.TCGA & (is.null(tcga.cancer.type) | is.null(reference.data))) stop("If you choose combine.with.TCGA=TRUE, i.e. to combine reference dataset with TCGA data, then you  need to  specify both'tcga.cancer.type'  and 'reference.data' ")
-  if (!combine.with.TCGA & (!is.null(tcga.cancer.type) & !is.null(reference.data))) warning("You choose combine.with.TCGA=FALSE, but specified both TCGA and reference data - only TCGA data will be used unless you choose combine.with.TCGA=TRUE")
+  # if (!combine.with.TCGA & (!is.null(tcga.cancer.type) & !is.null(reference.data))) warning("You choose combine.with.TCGA=FALSE, but specified both TCGA and reference data - only TCGA data will be used unless you choose combine.with.TCGA=TRUE")
   
   # match variants to their genes #
   if( is.null(reference.data) || (!is.null(reference.data) && is.null(reference.genes)) || (!is.null(reference.data) && !is.null(reference.genes) && ncol(reference.genes) == 2)){
@@ -201,17 +179,12 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         print(y)
         
         out <- lapply(genes, function(x){
-          # print(x)
           # TCGA estimates #
           # get frequencies for each gene #
           var_freq <- as.data.table(reference.data.temp %>% 
                                       filter(Hugo_Symbol == x, Cancer_Code == y) %>% 
                                       group_by(Variant) %>% 
                                       summarise(v_f = length(unique(patient_id))))
-          # var_freq <- as.data.table(reference.data.temp)[Hugo_Symbol == x & Cancer_Code == y,
-          #                                                .(v_f = length(unique(patient_id))),
-          #                                                by = .(Variant)
-          #                                                ]
           
           v_f <- var_freq$v_f
           names(v_f) <-var_freq$Variant
@@ -259,10 +232,6 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
                                     filter(Hugo_Symbol %in% genes_agg, Cancer_Code == names(GT_probs)[i]) %>% 
                                     group_by(Variant) %>% 
                                     summarise(v_f = length(unique(patient_id))))
-        # var_freq <- reference.data.temp[Hugo_Symbol %in% genes_agg & Cancer_Code == names(GT_probs)[i],
-        #                                 .(v_f = length(unique(patient_id))),
-        #                                 by = .(Variant)
-        #                                 ]
         
         v_f <- var_freq$v_f
         names(v_f) <-var_freq$Variant
@@ -308,16 +277,12 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
                                         filter(Hugo_Symbol == x, Cancer_Code == y) %>% 
                                         group_by(Variant) %>% 
                                         summarise(v_f = length(unique(patient_id))))
-            # var_freq <- as.data.table(reference.data.temp)[Hugo_Symbol == x & Cancer_Code == y,
-            #                                                .(v_f = length(unique(patient_id))),
-            #                                                by = .(Variant)
-            #                                                ]
             
             v_f <- var_freq$v_f
             names(v_f) <-var_freq$Variant
             # sample size #
             m <- length(unique(reference.data.temp$patient_id[reference.data.temp$Cancer_Code == y]))
-            N <- 3*as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol == x, 2])) # sum(3*d.gene$Exome_Size[d.gene$Hugo_Symbol == x])
+            N <- 3*as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol == x, 2])) 
             N0 = N -length(v_f)
             # run Good-Turing #
             GT <- goodturing_probs(counts = v_f,m=m,N=N, N0=N0)
@@ -331,8 +296,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
             out <- as.data.frame(GT) %>%
               rownames_to_column("Variant") %>%
               mutate(Cancer_Code = y,
-                     warning = warning_found_tcga#,
-                     #Gene = x
+                     warning = warning_found_tcga
               )
             out$Gene <- x
             return(out)
@@ -360,16 +324,11 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
                                       group_by(Variant) %>% 
                                       summarise(v_f = length(unique(patient_id))))
           
-          # var_freq <- reference.data.temp[Hugo_Symbol %in% genes_agg & Cancer_Code == names(GT_probs)[i],
-          #                                 .(v_f = length(unique(patient_id))),
-          #                                 by = .(Variant)
-          #                                 ]
-          
           v_f <- var_freq$v_f
           names(v_f) <-var_freq$Variant
           # sample size #
           m <- length(unique(reference.data.temp$patient_id[reference.data.temp$Cancer_Code == names(GT_probs)[i]]))
-          N <- N <- 3*sum(as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol %in% genes_agg, 2]))) # sum(3*d.gene$Exome_Size[d.gene$Hugo_Symbol %in% genes_agg])
+          N <- N <- 3*sum(as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol %in% genes_agg, 2])))
           N0 = N -length(v_f)
           # run Good-Turing #
           GT_agg <- goodturing_probs(counts = v_f,m=m,N=N, N0=N0)
@@ -398,11 +357,9 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         
         
         matched_genes <- as.data.table(do.call('rbind',lapply(xmut.ids, function(x){
-          # print(x)
           temp <- strsplit(x, " ")[[1]]
           chr <- as.numeric(temp[1])
           pos <- as.numeric(temp[2])
-          # print("test")
           gene <- reference.genes$Hugo_Symbol[reference.genes$Chromosome == chr & pos > reference.genes$Start & pos < reference.genes$End]
           if(length(gene)==0)
             gene <- "MissingGeneName"
@@ -429,16 +386,12 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
                                         filter(Hugo_Symbol == x, Cancer_Code == y) %>% 
                                         group_by(Variant) %>% 
                                         summarise(v_f = length(unique(patient_id))))
-            # var_freq <- as.data.table(reference.data.temp)[Hugo_Symbol == x & Cancer_Code == y,
-            #                                                .(v_f = length(unique(patient_id))),
-            #                                                by = .(Variant)
-            #                                                ]
             
             v_f <- var_freq$v_f
             names(v_f) <-var_freq$Variant
             # sample size #
             m <- length(unique(reference.data.temp$patient_id[reference.data.temp$Cancer_Code == y]))
-            N <- 3*as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol == x,"Exome_Size"])) # sum(3*d.gene$Exome_Size[d.gene$Hugo_Symbol == x])
+            N <- 3*as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol == x,"Exome_Size"])) 
             N0 = N -length(v_f)
             # run Good-Turing #
             GT <- goodturing_probs(counts = v_f,m=m,N=N, N0=N0)
@@ -452,10 +405,8 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
             out <- as.data.frame(GT) %>%
               rownames_to_column("Variant") %>%
               mutate(Cancer_Code = y,
-                     warning = warning_found_tcga#,
-                     #Gene = x
+                     warning = warning_found_tcga
               )
-            # print(x)
             out$Gene = x
             return(out)
           })
@@ -487,17 +438,13 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
                                       filter(Hugo_Symbol %in% genes_agg, Cancer_Code == names(GT_probs)[i]) %>% 
                                       group_by(Variant) %>% 
                                       summarise(v_f = length(unique(patient_id))))
-          # var_freq <- reference.data.temp[Hugo_Symbol %in% genes_agg & Cancer_Code == names(GT_probs)[i],
-          #                                 .(v_f = length(unique(patient_id))),
-          #                                 by = .(Variant)
-          #                                 ]
           
           print(nrow(var_freq))
           v_f <- var_freq$v_f
           names(v_f) <-var_freq$Variant
           # sample size #
           m <- length(unique(reference.data.temp$patient_id[reference.data.temp$Cancer_Code == names(GT_probs)[i]]))
-          N <- 3*sum(as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol %in% genes_agg, "Exome_Size"]))) # sum(3*d.gene$Exome_Size[d.gene$Hugo_Symbol %in% genes_agg])
+          N <- 3*sum(as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol %in% genes_agg, "Exome_Size"])))
           print(N)
           N0 = N -length(v_f)
           # run Good-Turing #
@@ -515,47 +462,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         print(colnames(GT_agg_probs[[1]]))
       }
       
-      #   ################################################
-      #   # for each site combine genes that were warned #
-      #   GT_agg_probs <- list()
-      #   GT_agg_N0 <- list()
-      #   for(i in 1:length(GT_probs)){
-      #     # print(i)
-      #     temp <- GT_probs[[i]]
-      #     # find all genes that were warned #
-      #     genes_agg <- as.character(unlist(unique(temp[temp$warning == 1, "Gene"])))
-      #     
-      #     # get frequencies for each gene #
-      #     var_freq <- as.data.table(reference.data.temp %>% 
-      #                                 filter(Hugo_Symbol %in% genes_agg, Cancer_Code == names(GT_probs)[i]) %>% 
-      #                                 group_by(Variant) %>% 
-      #                                 summarise(v_f = length(unique(patient_id))))
-      #     
-      #     v_f <- var_freq$v_f
-      #     names(v_f) <-var_freq$Variant
-      #     # sample size #
-      #     m <- length(unique(reference.data.temp$patient_id[reference.data.temp$Cancer_Code == names(GT_probs)[i]]))
-      #     N <- N <- 3*sum(as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol %in% genes_agg, "Exome_Size"]))) # sum(3*d.gene$Exome_Size[d.gene$Hugo_Symbol %in% genes_agg])
-      #     N0 = N -length(v_f)
-      #     # run Good-Turing #
-      #     GT_agg <- goodturing_probs(counts = v_f,m=m,N=N, N0=N0)
-      #     GT_agg <- as.data.table(as.data.frame(GT_agg) %>% 
-      #                               rownames_to_column("Variant") %>% 
-      #                               mutate(Cancer_Code = names(GT_probs)[i]
-      #                               ))
-      #     GT_agg_probs[[i]] <- GT_agg
-      #     GT_probs[[i]] <- GT_probs[[i]][GT_probs[[i]]$warning == 0,]
-      #     GT_agg_N0[[i]] <- c(N0,N)
-      #   }
-      #   names(GT_agg_N0) <- names(GT_probs)
-      #   names(GT_agg_probs) <- names(GT_probs)
-      #   print(colnames(GT_agg_probs[[1]]))
-      # }
-      
     }
-    
-    
-    
     
     
     ###################################################
@@ -663,73 +570,6 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
   }
   
   
-  
-  #   if (!is.null(reference.data)) #estimation using reference file
-  #   { if (all(colnames(reference.data)!="Chromosome")) stop("reference.data should include column 'Chromosome' that will be used to create mutation IDs")
-  #     if (all(colnames(reference.data)!="PatientID")) stop("reference.data should include column 'PatientID' - could be the same as sample IDs Tumor_Sample_Barcode")
-  #     if (all(colnames(reference.data)!="Start_Position")) stop("reference.data should include column 'Start_Position' that will be used to create mutation IDs")
-  #     if (all(colnames(reference.data)!="Reference_Allele")) stop("reference.data should include column 'Reference_Allele' that will be used to create mutation IDs")
-  #     if (all(colnames(reference.data)!="Tumor_Seq_Allele2")) stop("reference.data should include column 'Tumor_Seq_Allele2' that will be used to create mutation IDs")
-  #     if (all(colnames(reference.data)!="Tumor_Sample_Barcode")) stop("reference.data should include column 'Tumor_Sample_Barcode' that will be used in frequency calculation")
-  #     
-  #     reference.data$mut<-paste(reference.data$Chromosome,reference.data$Start_Position,reference.data$Reference_Allele,reference.data$Tumor_Seq_Allele2)
-  #     if (any(duplicated(paste(reference.data$mut,reference.data$PatientID))))
-  #     {
-  #       reference.data<-reference.data[!duplicated(paste(reference.data$mut,reference.data$PatientID)),]
-  #     }
-  #     
-  #     
-  #     if (all(xmut.ids %in%  reference.data$mut) & all(reference.data$mut %in% xmut.ids )) 
-  #     {#warning("All mutations in xmut.ids are observed in the reference dataset, and vice versa. See help file for more info. ")
-  #       plus1<-FALSE
-  #     }
-  #     else
-  #       
-  #       n<-length(unique(reference.data$PatientID))  
-  #     if (n<50 & is.null(tcga.cancer.type)) warning(paste("reference dataset has only",n,"patients - frequency estimation might be not very accurate")    )
-  #     
-  #     fref<-NULL
-  #     for (i in xmut.ids) fref<-c(fref,length(unique(reference.data$PatientID[reference.data$mut==i])) )
-  #     
-  #     if (all(fref==0,na.rm=T))    warning("None of the mutations in 'xmut.ids' were seen in this reference dataset. Make sure  'xmut.ids' are in the correct format: check ?get.mutation.frequencies")
-  #     if (  plus1==TRUE)
-  #       freq<-(fref+1)/(n+1)
-  #     else   freq<-fref/n
-  #     
-  #     
-  #     
-  #   }
-  #   
-  #   if (!is.null(tcga.cancer.type)) #estimation using TCGA
-  #   {  data(freqdata)
-  #     if (!(tcga.cancer.type %in% colnames(freqdata))) 
-  #       stop("tcga.cancer.type should be one of 33 TCGA cancer types:  ACC  BLCA BRCA CESC CHOL COAD DLBC ESCA GBM  HNSC KICH KIRC KIRP LAML LGG  LIHC LUAD LUSC
-  # MESO OV   PAAD PCPG PRAD READ SARC SKCM STAD TGCT THCA THYM UCEC UCS  UVM \n See https://gdc.cancer.gov/resources-tcga-users/tcga-code-tables/tcga-study-abbreviations for details")
-  #     f<-freqdata[match(xmut.ids,rownames(freqdata)), tcga.cancer.type]
-  #     names(f)<-xmut.ids
-  #     if (all(is.na(f)))    warning("None of the mutations were seen in TCGA.  Make sure  xmut.ids are in the correct format: check ?get.mutation.frequencies")
-  #     if (all(f==0,na.rm=T))    warning("None of the mutations were seen in this TCGA subtype. Make sure  xmut.ids are in the correct format: check ?get.mutation.frequencies")
-  #     f[is.na(f)]<-0
-  #     
-  #     
-  #     freq<-(f+1)/(freqdata[1, tcga.cancer.type]+1)
-  #     
-  #   }
-  #   
-  #   
-  #   
-  #   if (combine.with.TCGA & !is.null(reference.data) & !is.null(tcga.cancer.type))
-  #   {     if (  plus1==TRUE) freq<-(fref+f+1)/(freqdata[1, tcga.cancer.type]+n+1)
-  #   else freq<-(fref+f)/(freqdata[1, tcga.cancer.type]+n)
-  #   
-  #   
-  #   }  
-  
-  # freq <- as.numeric(matched_genes$freq)
-  # names(freq)<-xmut.ids
-  # freq
-  # matched_genes <- matched_genes[,-2]
-  # matched_genes
   if(!is.null(tcga.cancer.type.2))
     return(out)
   else

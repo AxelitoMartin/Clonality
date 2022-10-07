@@ -6,7 +6,17 @@ Date: 2017-18-04
 Author: Irina Ostrovnaya
 Maintainer: Irina Ostrovnaya <ostrovni@mskcc.org>
 Depends: R (>= 2.12.2), DNAcopy
-Imports: grDevices, graphics, stats, utils
+Imports: 
+    grDevices,
+    graphics,
+    stats,
+    utils,
+    data.table,
+    dplyr,
+    dtplyr,
+    tibble
+Remotes:
+    AxelitoMartin/variantprobs
 Suggests: gdata
 Description: Statistical tests for clonality versus independence of
         tumors from the same patient based on their LOH or genomewide

@@ -87,7 +87,7 @@ freq[mut.matrix$TK53IDC2+mut.matrix$TK53LCIS2==2]
 
 <<LR test2, echo=TRUE,print=TRUE>>= 
   set.seed(1) 
-SNVtest(mut.matrix$TK53IDC2,mut.matrix$TK53LCIS2  ,freq)
+SNVtest(mut.matrix$TK53IDC2,mut.matrix$TK53LCIS2  ,as.numeric(freq$freq))
 @
   
   The p-value of 0.014 confirms that these two tumors are clonal, i.e. originate from the same cell harboring the matching mutation.
