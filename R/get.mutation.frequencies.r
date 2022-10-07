@@ -27,6 +27,8 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
   #   stop("xmut.ids should be of the following format: {Chromosome Location RefAllele AltAllele}, each entry separated by space, \n where chromosome is a number 1-22 or X or Y; \n location is genomic location in  GRCh37 build; \n RefAllele is a reference allele and AltAllele is Alternative allele/Tumor_Seq_Allele2. \n For example '10 100003849 G A', is the mutation at chromosome 10, genomic location 100003849, where reference allele G is substituted with A, or \n '10 100011448 - CCGCTGCAAT' is the insertion of 'CCGCTGCAAT' at chromosome 10, location 100011448. \n The ref and alt alleles follow standard TCGA maf file notations.")
   
   if (is.null(tcga.cancer.type) & is.null(reference.data)) stop("You either need to specify 'tcga.cancer.type' to use TCGA based frequnecies or specify 'reference.data' to get reference dataset for frequency calculation")
+  if(!(tcga.cancer.type %in% names(GT_probs)) && is.null(reference.data))
+    stop(paste0("The cancer type you selected is not among the ones currently supported, please see ",names(GT_probs)))
   if (combine.with.TCGA & (is.null(tcga.cancer.type) | is.null(reference.data))) stop("If you choose combine.with.TCGA=TRUE, i.e. to combine reference dataset with TCGA data, then you  need to  specify both'tcga.cancer.type'  and 'reference.data' ")
   # if (!combine.with.TCGA & (!is.null(tcga.cancer.type) & !is.null(reference.data))) warning("You choose combine.with.TCGA=FALSE, but specified both TCGA and reference data - only TCGA data will be used unless you choose combine.with.TCGA=TRUE")
   
@@ -176,7 +178,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
       genes <- unique(reference.data.temp$Hugo_Symbol)
       GT_probs <- lapply(sites, function(y){
         
-        print(y)
+        # print(y)
         
         out <- lapply(genes, function(x){
           # TCGA estimates #
@@ -215,14 +217,14 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         return(estimates)
       })
       names(GT_probs) <- sites
-      print(colnames(GT_probs[[1]]))
+      # print(colnames(GT_probs[[1]]))
       
       ################################################
       # for each site combine genes that were warned #
       GT_agg_probs <- list()
       GT_agg_N0 <- list()
       for(i in 1:length(GT_probs)){
-        print(i)
+        # print(i)
         temp <- GT_probs[[i]]
         # find all genes that were warned #
         genes_agg <- as.character(unlist(unique(temp[temp$warning == 1, "Gene"])))
@@ -251,7 +253,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
       }
       names(GT_agg_N0) <- names(GT_probs)
       names(GT_agg_probs) <- names(GT_probs)
-      print(colnames(GT_agg_probs[[1]]))
+      # print(colnames(GT_agg_probs[[1]]))
     }
     # if file is provided #
     else{
@@ -268,7 +270,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         genes <- unique(reference.data.temp$Hugo_Symbol)
         GT_probs <- lapply(sites, function(y){
           
-          print(y)
+          # print(y)
           
           out <- lapply(genes, function(x){
             # TCGA estimates #
@@ -306,7 +308,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
           return(estimates)
         })
         names(GT_probs) <- sites
-        print(colnames(GT_probs[[1]]))
+        # print(colnames(GT_probs[[1]]))
         
         ################################################
         # for each site combine genes that were warned #
@@ -342,12 +344,12 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         }
         names(GT_agg_N0) <- names(GT_probs)
         names(GT_agg_probs) <- names(GT_probs)
-        print(colnames(GT_agg_probs[[1]]))
+        # print(colnames(GT_agg_probs[[1]]))
       }
       
       
       # baits #
-      if(ncol(reference.genes) == 4){
+      if(ncol(reference.genes) > 4){
         
         # add sizes to all genes #
         reference.genes <- as.data.table(reference.genes %>% 
@@ -376,7 +378,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         genes <- unique(reference.data.temp$Hugo_Symbol)
         GT_probs <- lapply(sites, function(y){
           
-          print(y)
+          # print(y)
           
           out <- lapply(genes, function(x){
             
@@ -415,7 +417,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
           return(estimates)
         })
         names(GT_probs) <- sites
-        print(colnames(GT_probs[[1]]))
+        # print(colnames(GT_probs[[1]]))
         
         
         ################################################
@@ -423,11 +425,11 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         GT_agg_probs <- list()
         GT_agg_N0 <- list()
         for(i in 1:length(GT_probs)){
-          print(i)
+          # print(i)
           temp <- GT_probs[[i]]
           # find all genes that were warned #
           genes_agg <- as.character(unlist(unique(temp[temp$warning == 1, "Gene"])))
-          print(genes_agg)
+          # print(genes_agg)
           # get frequencies for each gene #
           var_freq <- as.data.table(reference.data.temp %>% 
                                       filter(Hugo_Symbol %in% genes_agg, Cancer_Code == sites[i]) %>% 
@@ -439,13 +441,13 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
                                       group_by(Variant) %>% 
                                       summarise(v_f = length(unique(patient_id))))
           
-          print(nrow(var_freq))
+          # print(nrow(var_freq))
           v_f <- var_freq$v_f
           names(v_f) <-var_freq$Variant
           # sample size #
           m <- length(unique(reference.data.temp$patient_id[reference.data.temp$Cancer_Code == names(GT_probs)[i]]))
           N <- 3*sum(as.numeric(unlist(reference.genes[reference.genes$Hugo_Symbol %in% genes_agg, "Exome_Size"])))
-          print(N)
+          # print(N)
           N0 = N -length(v_f)
           # run Good-Turing #
           GT_agg <- goodturing_probs(counts = v_f,m=m,N=N, N0=N0)
@@ -459,7 +461,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
         }
         names(GT_agg_N0) <- names(GT_probs)
         names(GT_agg_probs) <- names(GT_probs)
-        print(colnames(GT_agg_probs[[1]]))
+        # print(colnames(GT_agg_probs[[1]]))
       }
       
     }
@@ -472,8 +474,8 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
     site_spe_agg_gt <- as.data.table(GT_agg_probs[[tcga.cancer.type]])
     # get estimates per genes found in the matching #
     genes <- unique(matched_genes$gene)
-    print(colnames(site_spe_gt))
-    print(colnames(site_spe_agg_gt))
+    # print(colnames(site_spe_gt))
+    # print(colnames(site_spe_agg_gt))
     for(i in 1:length(genes)){
       gene_temp <- genes[i]
       variants <- matched_genes$variant[matched_genes$gene == gene_temp]

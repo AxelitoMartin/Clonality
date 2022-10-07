@@ -58,15 +58,63 @@ Marginal frequencies of mutations are assumed to be known and used as fixed quan
 
 
 <<Frequency estimation, echo=TRUE,print=FALSE>>= 
-  library(Clonality)
+library(Clonality)
+library(dplyr)
+library(dtplyr)
 data(lcis)
-data(freqdata)
 
 mut.matrix<-create.mutation.matrix(lcis )
 
 freq<-get.mutation.frequencies(rownames(mut.matrix),"BRCA") 
 @
 
+This can be performed using a user defined dataset as the anchor for probability calculations using the `reference.data` argument:
+
+<<Frequency estimation, echo=TRUE,print=FALSE>>= 
+lcis_mod <- lcis %>% 
+  rowwise() %>% 
+  mutate(Variant = paste(Chromosome, Start_Position, Reference_Allele, Tumor_Seq_Allele2, sep = " "),
+         Cancer_Code = "BRCA") %>% 
+  select(Hugo_Symbol, Variant, Tumor_Sample_Barcode, Cancer_Code) %>% 
+  rename(patient_id = Tumor_Sample_Barcode)
+
+
+freq_ref<-get.mutation.frequencies(rownames(mut.matrix),"BRCA",reference.data = lcis_mod) 
+@
+
+The user can furthermore input sizes for the genes of interest using the `reference.gene` argument:
+
+
+<<Frequency estimation, echo=TRUE,print=FALSE>>= 
+ref_genes <- as.data.frame(
+  cbind(c("CDH1","PIK3CA","MAP3K1"), c(2308,5466,3360))
+)
+colnames(ref_genes) <- c("Hugo_Symbol","Exome_Size")
+lcis_mod <- lcis_mod %>% 
+  filter(Hugo_Symbol %in% c("CDH1","PIK3CA","MAP3K1"))
+freq_ref_genes<-get.mutation.frequencies(unique(lcis_mod$Variant),"BRCA",reference.data = lcis_mod,reference.genes = ref_genes) 
+@
+
+
+Finally the user can alternatively provide the baits file for the genes:
+
+<<Frequency estimation, echo=TRUE,print=FALSE>>= 
+ref_genes <- as.data.frame(rbind(
+  c(16, 68771200, 68771500, "CDH1"),
+  c(16, 68771700, 68862300, "CDH1"),
+  c(16, 68862400, 68867500, "CDH1"),
+  c(3,178916500, 178917000, "PIK3CA"),
+  c(3, 178917100, 178952200, "PIK3CA"),
+  c(5,56111400,56111900, "MAP3K1"),
+  c(5,56112000, 56189600, "MAP3K1")
+))
+colnames(ref_genes) <- c("Chromosome","Start","End","Hugo_Symbol")
+ref_genes <- ref_genes %>% 
+  mutate(Chromosome = as.numeric(Chromosome),
+         Start = as.numeric(Start),
+         End = as.numeric(End))
+freq_ref_genes<-get.mutation.frequencies(unique(lcis_mod$Variant),"BRCA",reference.data = lcis_mod,reference.genes = ref_genes)
+@
   
   \subsection{Likelihood model}
 
