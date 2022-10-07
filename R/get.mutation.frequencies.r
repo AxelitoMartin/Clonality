@@ -349,7 +349,7 @@ get.mutation.frequencies <- function(xmut.ids, tcga.cancer.type=NULL, tcga.cance
       
       
       # baits #
-      if(ncol(reference.genes) > 4){
+      if(ncol(reference.genes) > 2){
         
         # add sizes to all genes #
         reference.genes <- as.data.table(reference.genes %>% 
